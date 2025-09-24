@@ -30,6 +30,36 @@ function resolveImage(ad: AdRecord): string | null {
   return null;
 }
 
+function formatActiveDuration(firstSeen: string, lastSeen: string): string {
+  const first = new Date(firstSeen);
+  const last = new Date(lastSeen);
+  if (Number.isNaN(first.getTime()) || Number.isNaN(last.getTime())) {
+    return firstSeen; // fallback to raw value if dates are invalid
+  }
+
+  let diffMs = last.getTime() - first.getTime();
+  if (diffMs < 0) diffMs = 0;
+  const dayMs = 24 * 60 * 60 * 1000;
+  const days = Math.floor(diffMs / dayMs);
+
+  if (days < 7) {
+    return `${days} day${days === 1 ? '' : 's'}`;
+  }
+
+  if (days < 30) {
+    const weeks = Math.floor(days / 7);
+    return `${weeks} week${weeks === 1 ? '' : 's'}`;
+  }
+
+  const months = Math.floor(days / 30);
+  const remainingDays = days - months * 30;
+  const weeks = Math.floor(remainingDays / 7);
+  if (weeks > 0) {
+    return `${months} month${months === 1 ? '' : 's'} ${weeks} week${weeks === 1 ? '' : 's'}`;
+  }
+  return `${months} month${months === 1 ? '' : 's'}`;
+}
+
 export function AdCard({ ad }: AdCardProps) {
   const img = resolveImage(ad);
   const isImage = ad.format === 'Image';
@@ -47,13 +77,23 @@ export function AdCard({ ad }: AdCardProps) {
         <CardTitle>{ad.advertiserName}</CardTitle>
         <div className="ad-meta">
           <CardBadge>Asset type: {ad.format}</CardBadge>
+          {ad.gatcLink ? (
+            <a
+              href={ad.gatcLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="badge"
+            >
+              GATC link
+            </a>
+          ) : null}
         </div>
         <div className="ad-fields">
           <div>
             <span className="label">Last seen:</span> {formatDate(ad.lastSeenDate)}
           </div>
           <div>
-            <span className="label">Available from:</span> {formatDate(ad.firstSeenDate)}
+            <span className="label">Active from:</span> {formatActiveDuration(ad.firstSeenDate, ad.lastSeenDate)}
           </div>
         </div>
       </CardBody>
