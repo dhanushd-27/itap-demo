@@ -16,7 +16,15 @@ function resolveImage(ad: AdRecord): string | null {
     return ad.adCreative.imageUrl ?? ad.imageUrl ?? null;
   }
   if (isVideoAdRecord(ad)) {
-    return ad.videoThumbnailUrl ?? null;
+    if (ad.videoThumbnailUrl) return ad.videoThumbnailUrl;
+    // Fallback: attempt to generate a preview image from the GATC page
+    if (ad.gatcLink) {
+      const encoded = encodeURIComponent(ad.gatcLink);
+      // Using thum.io to render a static preview image of the GATC page
+      // You can replace with your own screenshot service if preferred
+      return `https://image.thum.io/get/width/800/crop/800/${encoded}`;
+    }
+    return null;
   }
   return null;
 }
@@ -32,28 +40,49 @@ export function AdCard({ ad }: AdCardProps) {
       {img ? (
         <CardImage src={img} alt={ad.advertiserName} />
       ) : (
-        <div className="card-image placeholder professional">
-          {isImage
-            ? 'Image preview unavailable'
-            : 'No thumbnail available for this video in the dataset. Use the link below to view.'}
-        </div>
+        isImage ? (
+          <div className="card-image-wrapper">
+            <div className="card-image placeholder professional">
+              Image preview unavailable
+            </div>
+          </div>
+        ) : (
+          <div className="card-image-wrapper">
+            {ad.gatcLink ? (
+              <a
+                href={ad.gatcLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="card-image placeholder professional"
+              >
+                No thumbnail available. Click to open on GATC.
+              </a>
+            ) : (
+              <div className="card-image placeholder professional">
+                No thumbnail available for this video in the dataset.
+              </div>
+            )}
+          </div>
+        )
       )}
       <CardBody>
         <CardTitle>{ad.advertiserName}</CardTitle>
         <div className="ad-meta">
           <CardBadge>Asset type: {ad.format}</CardBadge>
-          {assetUrl || fallbackUrl ? (
-            <a
-              href={(assetUrl || fallbackUrl) as string}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="badge"
-            >
-              {assetUrl ? 'Open asset' : 'Open on GATC'}
-            </a>
-          ) : null}
         </div>
         <div className="ad-fields">
+          {(assetUrl || fallbackUrl) && (
+            <div>
+              <span className="label">Link:</span>{' '}
+              <a
+                href={(assetUrl || fallbackUrl) as string}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                GATC link
+              </a>
+            </div>
+          )}
           <div>
             <span className="label">Last seen:</span> {formatDateDisplay(ad.lastSeenDate)}
           </div>

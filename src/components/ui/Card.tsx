@@ -16,14 +16,21 @@ interface CardImageProps {
 
 export function CardImage({ src, alt }: CardImageProps) {
   const [naturalSize, setNaturalSize] = useState<{ w: number; h: number } | null>(null);
+  const [hasError, setHasError] = useState(false);
 
-  if (!src) {
-    return <div className="card-image placeholder">No image</div>;
-  }
+  const showPlaceholder = !src || hasError;
 
   const style = naturalSize && naturalSize.w > 0 && naturalSize.h > 0
     ? { aspectRatio: `${naturalSize.w} / ${naturalSize.h}` }
     : { aspectRatio: '16 / 9' };
+
+  if (showPlaceholder) {
+    return (
+      <div className="card-image-wrapper" style={style}>
+        <div className="card-image placeholder">Preview unavailable</div>
+      </div>
+    );
+  }
 
   return (
     <div className="card-image-wrapper" style={style}>
@@ -35,6 +42,7 @@ export function CardImage({ src, alt }: CardImageProps) {
           const img = e.currentTarget;
           setNaturalSize({ w: img.naturalWidth, h: img.naturalHeight });
         }}
+        onError={() => setHasError(true)}
       />
     </div>
   );

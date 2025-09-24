@@ -40,9 +40,6 @@ export function Dashboard() {
 
   return (
     <div className="dashboard">
-      <header className="dashboard-header">
-        <h1>iTap POC</h1>
-      </header>
       <Filters
         minActiveFilter={minActiveFilter}
         sortOrder={sortOrder}

@@ -77,6 +77,7 @@
 
 .card-image-wrapper {
   width: 100%;
+  aspect-ratio: 16 / 9; /* default ratio when natural size unknown */
   background: #e0f2fe; /* sky-100 */
   border-bottom: 1px solid #bae6fd;
   overflow: hidden;
