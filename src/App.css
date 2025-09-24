@@ -15,6 +15,57 @@
   gap: 16px; /* gap-4 */
 }
 
+.toolbar {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin: 12px 0 16px;
+  padding: 8px 12px;
+  background: #f0f9ff; /* sky-50 */
+  border: 1px solid #bae6fd; /* sky-200 */
+  border-radius: 10px;
+}
+
+.control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.control-label {
+  color: #0f172a; /* slate-900 */
+  font-size: 14px;
+}
+
+.select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-color: #ffffff;
+  border: 1px solid #93c5fd; /* blue-300 */
+  color: #0f172a;
+  padding: 6px 30px 6px 10px;
+  font-size: 14px;
+  border-radius: 8px;
+  line-height: 1.2;
+  background-image: url('data:image/svg+xml;utf8,<svg fill="%235b728a" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 16px 16px;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.select:hover {
+  border-color: #60a5fa; /* blue-400 */
+}
+
+.select:focus {
+  outline: none;
+  border-color: #3b82f6; /* blue-500 */
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+}
+
 .ad-card {
   border: 1px solid #bae6fd; /* border */
   border-radius: 12px; /* rounded */
@@ -24,11 +75,21 @@
   flex: 1 1 260px; /* responsive card width in flex wrap */
 }
 
+.card-image-wrapper {
+  width: 100%;
+  background: #e0f2fe; /* sky-100 */
+  border-bottom: 1px solid #bae6fd;
+  overflow: hidden;
+  display: block;
+}
+
 .card-image {
   width: 100%;
-  height: 160px;
+  height: 100%;
   object-fit: cover;
-  background: #e0f2fe; /* sky-100 */
+  object-position: center;
+  display: block;
+  max-width: 100%;
 }
 
 .card-image.placeholder {

@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { ReactNode, useState } from 'react';
 
 interface CardRootProps {
   children: ReactNode;
@@ -15,10 +15,29 @@ interface CardImageProps {
 }
 
 export function CardImage({ src, alt }: CardImageProps) {
+  const [naturalSize, setNaturalSize] = useState<{ w: number; h: number } | null>(null);
+
   if (!src) {
     return <div className="card-image placeholder">No image</div>;
   }
-  return <img className="card-image" src={src} alt={alt ?? ''} />;
+
+  const style = naturalSize && naturalSize.w > 0 && naturalSize.h > 0
+    ? { aspectRatio: `${naturalSize.w} / ${naturalSize.h}` }
+    : { aspectRatio: '16 / 9' };
+
+  return (
+    <div className="card-image-wrapper" style={style}>
+      <img
+        className="card-image"
+        src={src}
+        alt={alt ?? ''}
+        onLoad={(e) => {
+          const img = e.currentTarget;
+          setNaturalSize({ w: img.naturalWidth, h: img.naturalHeight });
+        }}
+      />
+    </div>
+  );
 }
 
 interface CardBodyProps {
