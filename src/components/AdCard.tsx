@@ -35,6 +35,10 @@ export function AdCard({ ad }: AdCardProps) {
 
   return (
     <Card className="ad-card">
+      <div className="ad-live-pill" aria-hidden>
+        <img className="ad-live-icon" src="/available.gif" alt="" />
+        <span className="ad-live-text">Live</span>
+      </div>
       {img ? (
         gatcLink ? (
           <a

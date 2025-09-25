@@ -67,12 +67,13 @@
 }
 
 .ad-card {
-  border: 1px solid #d1d5db; /* gray-300 for clearer separation */
+  border: 1px solid #cbd5e1; /* slate-300 for clearer contrast */
   border-radius: 12px; /* rounded */
-  background: #ffffff; /* card white */
-  overflow: hidden;
+  background: #f7f7f9; /* subtle low gray */
+  overflow: hidden; /* keep content within rounded corners */
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   flex: 1 1 260px; /* responsive card width in flex wrap */
+  position: relative; /* for overlay badge */
 }
 
 .card-image-wrapper {
@@ -83,6 +84,11 @@
   border-radius: 8px;
   overflow: hidden;
   display: block;
+}
+
+/* Tighten internal layout: align media and body with consistent gutters */
+.ad-card > .card-image-wrapper {
+  margin: 0 12px 8px 12px;
 }
 
 .card-image {
@@ -111,13 +117,28 @@
 
 .card-body { padding: 12px; }
 .card-title { font-size: 16px; font-weight: 600; margin-bottom: 8px; color: #0f172a; }
-.ad-card, .card-body, .ad-fields { color: #111827; }
+.card-title {
+  display: -webkit-box;
+  line-clamp: 2;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.ad-card, .card-body, .ad-fields { color: inherit; }
 .ad-fields .label { color: #6b7280; }
 
 .ad-card { text-align: left; }
 
 .ad-meta {
   margin-bottom: 8px;
+}
+
+/* Improve spacing between field rows */
+.ad-fields > div {
+  margin-bottom: 6px;
+}
+.ad-fields > div:last-child {
+  margin-bottom: 0;
 }
 
 .badge {
@@ -128,15 +149,39 @@
   border-radius: 9999px;
   font-size: 12px;
 }
+.ad-meta .badge {
+  margin-right: 8px;
+}
 
 .ad-card:hover {
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
   border-color: #9ca3af; /* gray-400 on hover for contrast */
 }
 
+/* Subtle lift and focus treatment */
+.ad-card {
+  transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+.ad-card:hover {
+  transform: translateY(-2px);
+}
+.ad-card:focus-within {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(107, 114, 128, 0.25); /* gray-500 ring */
+}
+
 .ad-fields .label {
   color: #6b7280;
   margin-right: 4px;
+}
+
+/* Link styling inside cards for better clarity/accessibility while keeping palette */
+.ad-fields a {
+  color: #0f172a; /* slate-900 */
+  text-decoration: underline;
+}
+.ad-fields a:hover {
+  color: #111827; /* gray-900 */
 }
 #root {
   max-width: 1280px;
@@ -179,4 +224,32 @@
 
 .read-the-docs {
   color: #888;
+}
+
+/* Live availability badge */
+.ad-live-pill {
+  position: static; /* in normal flow */
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #f8f9fa; /* a little dark shade of white */
+  color: inherit; /* default text color */
+  border: 1px solid #e5e7eb; /* subtle border */
+  border-radius: 9999px;
+  padding: 4px 10px 4px 6px;
+  margin: 0px 0px 6px 6px; /* reduced top spacing */
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.ad-live-icon {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: block;
+}
+
+.ad-live-text {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
 }
