@@ -97,7 +97,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #0369a1; /* sky-700 */
+  color: #6b7280; /* grey */
   font-size: 14px;
   padding: 12px;
   text-align: center;
@@ -105,7 +105,6 @@
 
 .card-image.placeholder.professional {
   background: linear-gradient(180deg, #e0f2fe, #ffffff);
-  border-bottom: 1px solid #bae6fd;
 }
 
 .card-body { padding: 12px; }

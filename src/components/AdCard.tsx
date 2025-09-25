@@ -31,8 +31,6 @@ function resolveImage(ad: AdRecord): string | null {
 
 export function AdCard({ ad }: AdCardProps) {
   const img = resolveImage(ad);
-  const assetUrl = img;
-  const fallbackUrl = !assetUrl && isVideoAdRecord(ad) ? ad.gatcLink : null;
   const gatcLink = ad.gatcLink ?? null;
 
   return (
@@ -57,11 +55,11 @@ export function AdCard({ ad }: AdCardProps) {
               href={gatcLink}
               target="_blank"
               rel="noopener noreferrer"
-              className="card-image placeholder grey"
+              className="card-image placeholder"
               aria-label="Open on Google Ads Transparency Center"
             />
           ) : (
-            <div className="card-image placeholder grey" />
+            <div className="card-image placeholder " />
           )}
         </div>
       )}
@@ -71,11 +69,11 @@ export function AdCard({ ad }: AdCardProps) {
           <CardBadge>Format: {ad.format}</CardBadge>
         </div>
         <div className="ad-fields">
-          {(assetUrl || fallbackUrl) && (
+          {gatcLink && (
             <div>
               <span className="label">Link:</span>{' '}
               <a
-                href={(assetUrl || fallbackUrl) as string}
+                href={gatcLink}
                 target="_blank"
                 rel="noopener noreferrer"
               >
