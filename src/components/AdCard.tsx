@@ -31,44 +31,44 @@ function resolveImage(ad: AdRecord): string | null {
 
 export function AdCard({ ad }: AdCardProps) {
   const img = resolveImage(ad);
-  const isImage = ad.format === 'Image';
   const assetUrl = img;
   const fallbackUrl = !assetUrl && isVideoAdRecord(ad) ? ad.gatcLink : null;
+  const gatcLink = ad.gatcLink ?? null;
 
   return (
     <Card className="ad-card">
       {img ? (
-        <CardImage src={img} alt={ad.advertiserName} />
-      ) : (
-        isImage ? (
-          <div className="card-image-wrapper">
-            <div className="card-image placeholder professional">
-              Image preview unavailable
-            </div>
-          </div>
+        gatcLink ? (
+          <a
+            href={gatcLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Open on Google Ads Transparency Center"
+          >
+            <CardImage src={img} alt={ad.advertiserName} />
+          </a>
         ) : (
-          <div className="card-image-wrapper">
-            {ad.gatcLink ? (
-              <a
-                href={ad.gatcLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="card-image placeholder professional"
-              >
-                No thumbnail available. Click to open on GATC.
-              </a>
-            ) : (
-              <div className="card-image placeholder professional">
-                No thumbnail available for this video in the dataset.
-              </div>
-            )}
-          </div>
+          <CardImage src={img} alt={ad.advertiserName} />
         )
+      ) : (
+        <div className="card-image-wrapper">
+          {gatcLink ? (
+            <a
+              href={gatcLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="card-image placeholder grey"
+              aria-label="Open on Google Ads Transparency Center"
+            />
+          ) : (
+            <div className="card-image placeholder grey" />
+          )}
+        </div>
       )}
       <CardBody>
         <CardTitle>{ad.advertiserName}</CardTitle>
         <div className="ad-meta">
-          <CardBadge>Asset type: {ad.format}</CardBadge>
+          <CardBadge>Format: {ad.format}</CardBadge>
         </div>
         <div className="ad-fields">
           {(assetUrl || fallbackUrl) && (
@@ -79,7 +79,7 @@ export function AdCard({ ad }: AdCardProps) {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                GATC link
+                View Ad
               </a>
             </div>
           )}
@@ -87,7 +87,7 @@ export function AdCard({ ad }: AdCardProps) {
             <span className="label">Last seen:</span> {formatDateDisplay(ad.lastSeenDate)}
           </div>
           <div>
-            <span className="label">Active from:</span> {formatActiveDuration(ad.firstSeenDate, ad.lastSeenDate)}
+            <span className="label">Running Since:</span> {formatActiveDuration(ad.firstSeenDate, ad.lastSeenDate)}
           </div>
         </div>
       </CardBody>

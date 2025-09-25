@@ -28,7 +28,7 @@ export function CardImage({ src, alt }: CardImageProps) {
   if (showPlaceholder) {
     return (
       <div className="card-image-wrapper" style={style}>
-        <div className="card-image placeholder">Preview unavailable</div>
+        <div className="card-image placeholder grey"></div>
       </div>
     );
   }
