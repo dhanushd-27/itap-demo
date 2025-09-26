@@ -89,8 +89,8 @@
 .card-image-wrapper {
   width: 100%;
   aspect-ratio: 16 / 9; /* default ratio when natural size unknown */
-  background: #f3f4f6; /* gray-100 */
-  border: 1px solid #d1d5db; /* gray-300 */
+  background: #e5e7eb; /* gray-200 */
+  border: 1px solid #6b7280; /* gray-500 */
   border-radius: 8px;
   overflow: hidden;
   display: block;

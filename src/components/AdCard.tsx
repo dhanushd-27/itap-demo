@@ -32,7 +32,7 @@ function resolveImage(ad: AdRecord): string | null {
 export function AdCard({ ad }: AdCardProps) {
   const img = resolveImage(ad);
   const gatcLink = ad.gatcLink ?? null;
-  const platforms = Array.isArray((ad as any).publisher_platform) ? (ad as any).publisher_platform as string[] : null;
+  const platforms = Array.isArray((ad as AdRecord).publisher_platform) ? (ad as AdRecord).publisher_platform as string[] : null;
   const platformIconSrc: Record<string, string> = {
     FACEBOOK: '/facebook.png',
     INSTAGRAM: '/instagram.png',
