@@ -1,39 +1,52 @@
-import type { ChangeEvent } from 'react';
+import { OrderFilter } from './filters/OrderFilter';
+import { LastActiveFilter } from './filters/LastActiveFilter';
+import { RunningSinceFilter } from './filters/RunningSinceFilter';
+import { CompanyFilter } from './filters/CompanyFilter';
+import { FormatFilter } from './filters/FormatFilter';
 
 interface FiltersProps {
-  minActiveFilter: string;
+  // Order filter
   sortOrder: 'asc' | 'desc';
-  onChangeMinActiveFilter: (value: string) => void;
   onChangeSortOrder: (value: 'asc' | 'desc') => void;
+  
+  // Last active filter
+  lastActiveFilter: string;
+  onChangeLastActiveFilter: (value: string) => void;
+  
+  // Running since filter (campaign duration)
+  runningSinceFilter: string;
+  onChangeRunningSinceFilter: (value: string) => void;
+  
+  // Company filter
+  companyFilter: string;
+  onChangeCompanyFilter: (value: string) => void;
+  companies: string[];
+  
+  // Format filter
+  formatFilter: string;
+  onChangeFormatFilter: (value: string) => void;
 }
 
 export function Filters({
-  minActiveFilter,
   sortOrder,
-  onChangeMinActiveFilter,
   onChangeSortOrder,
+  lastActiveFilter,
+  onChangeLastActiveFilter,
+  runningSinceFilter,
+  onChangeRunningSinceFilter,
+  companyFilter,
+  onChangeCompanyFilter,
+  companies,
+  formatFilter,
+  onChangeFormatFilter,
 }: FiltersProps) {
-  const handleActiveChange = (e: ChangeEvent<HTMLSelectElement>) => onChangeMinActiveFilter(e.target.value);
-  const handleOrderChange = (e: ChangeEvent<HTMLSelectElement>) => onChangeSortOrder(e.target.value as 'asc' | 'desc');
-
   return (
     <div className="toolbar">
-      <label className="control">
-        <span className="control-label">Active from</span>
-        <select className="select" value={minActiveFilter} onChange={handleActiveChange}>
-          <option value="all">All</option>
-          <option value="lt7">Less than 7 days</option>
-          <option value="7to29">7–29 days (weeks)</option>
-          <option value="gte30">30+ days (months)</option>
-        </select>
-      </label>
-      <label className="control">
-        <span className="control-label">Order</span>
-        <select className="select" value={sortOrder} onChange={handleOrderChange}>
-          <option value="asc">Ascending</option>
-          <option value="desc">Descending</option>
-        </select>
-      </label>
+      <OrderFilter value={sortOrder} onChange={onChangeSortOrder} />
+      <LastActiveFilter value={lastActiveFilter} onChange={onChangeLastActiveFilter} />
+      <RunningSinceFilter value={runningSinceFilter} onChange={onChangeRunningSinceFilter} />
+      <CompanyFilter value={companyFilter} onChange={onChangeCompanyFilter} companies={companies} />
+      <FormatFilter value={formatFilter} onChange={onChangeFormatFilter} />
     </div>
   );
 }
