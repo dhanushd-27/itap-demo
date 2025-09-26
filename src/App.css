@@ -116,7 +116,21 @@
 }
 
 .card-body { padding: 12px; }
-.card-title { font-size: 16px; font-weight: 600; margin-bottom: 8px; color: #0f172a; }
+
+.ad-header {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.card-title { 
+  font-size: 16px; 
+  font-weight: 600; 
+  margin-bottom: 0; 
+  color: #0f172a; 
+}
 .card-title {
   display: -webkit-box;
   line-clamp: 2;
@@ -173,6 +187,32 @@
 .ad-fields .label {
   color: #6b7280;
   margin-right: 4px;
+}
+
+/* View Ad button styling */
+.view-ad-button {
+  display: inline-block;
+  padding: 6px 12px;
+  background-color: #334155; /* slate-700 - darker color by default */
+  color: #ffffff !important;
+  text-decoration: none !important;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  white-space: nowrap;
+}
+
+.view-ad-button:hover {
+  background-color: #0f172a; /* slate-900 - darker on hover */
+  color: #ffffff !important;
+  text-decoration: none !important;
+  transform: translateY(-1px);
+}
+
+.view-ad-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.25);
 }
 
 /* Link styling inside cards for better clarity/accessibility while keeping palette */

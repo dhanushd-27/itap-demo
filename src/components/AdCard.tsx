@@ -68,23 +68,23 @@ export function AdCard({ ad }: AdCardProps) {
         </div>
       )}
       <CardBody>
-        <CardTitle>{ad.advertiserName}</CardTitle>
+        <div className="ad-header">
+          <CardTitle>{ad.advertiserName}</CardTitle>
+          {gatcLink && (
+            <a
+              href={gatcLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="view-ad-button"
+            >
+              View Ad
+            </a>
+          )}
+        </div>
         <div className="ad-meta">
           <CardBadge>Format: {ad.format}</CardBadge>
         </div>
         <div className="ad-fields">
-          {gatcLink && (
-            <div>
-              <span className="label">Link:</span>{' '}
-              <a
-                href={gatcLink}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                View Ad
-              </a>
-            </div>
-          )}
           <div>
             <span className="label">Last seen:</span> {formatDateDisplay(ad.lastSeenDate)}
           </div>
