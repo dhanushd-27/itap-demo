@@ -7,7 +7,17 @@
 
 .dashboard-header {
   margin-bottom: 16px;
+  display: flex;
+  align-items: center;
 }
+
+.app-logo {
+  height: 80px;
+  width: auto;
+  display: block;
+  margin-left: 4px;
+}
+
 
 .grid {
   display: flex;

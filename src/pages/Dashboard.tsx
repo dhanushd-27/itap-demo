@@ -87,6 +87,9 @@ export function Dashboard() {
 
   return (
     <div className="dashboard">
+      <div className="dashboard-header">
+        <img src="/itap.png" alt="iTAP" className="app-logo" />
+      </div>
       <Filters
         sortOrder={sortOrder}
         onChangeSortOrder={setSortOrder}
