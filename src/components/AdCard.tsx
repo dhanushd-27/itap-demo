@@ -32,6 +32,13 @@ function resolveImage(ad: AdRecord): string | null {
 export function AdCard({ ad }: AdCardProps) {
   const img = resolveImage(ad);
   const gatcLink = ad.gatcLink ?? null;
+  const platforms = Array.isArray((ad as any).publisher_platform) ? (ad as any).publisher_platform as string[] : null;
+  const platformIconSrc: Record<string, string> = {
+    FACEBOOK: '/facebook.png',
+    INSTAGRAM: '/instagram.png',
+    AUDIENCE_NETWORK: '/network.png',
+    MESSENGER: '/messenger.png',
+  };
 
   return (
     <Card className="ad-card">
@@ -83,6 +90,19 @@ export function AdCard({ ad }: AdCardProps) {
         </div>
         <div className="ad-meta">
           <CardBadge>Format: {ad.format}</CardBadge>
+          {platforms && platforms.length > 0 && (
+            <div className="ad-platform-icons" title={`Platforms: ${platforms.join(', ')}`}>
+              {platforms.map((p) => (
+                <img
+                  key={p}
+                  className="ad-platform-icon"
+                  src={platformIconSrc[p] ?? '/network.png'}
+                  alt={p}
+                  title={p}
+                />
+              ))}
+            </div>
+          )}
         </div>
         <div className="ad-fields">
           <div>

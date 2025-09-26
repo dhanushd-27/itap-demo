@@ -147,6 +147,20 @@
   margin-bottom: 8px;
 }
 
+/* Platform icons layout */
+.ad-platform-icons {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px; /* total 4px gap between icons */
+  margin-left: 4px;
+}
+
+.ad-platform-icon {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+}
+
 /* Improve spacing between field rows */
 .ad-fields > div {
   margin-bottom: 6px;

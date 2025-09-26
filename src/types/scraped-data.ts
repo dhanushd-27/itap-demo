@@ -40,6 +40,8 @@ export interface BaseAdRecord {
   campaignDuration: string;     // e.g. "6 months", "26 days", "1 years"
   creativeDimensions: string;   // often "Unknown"
   apiData: ApiData;
+  // Present only for Facebook Ad Library-derived records
+  publisher_platform?: string[]; // e.g. ["FACEBOOK", "INSTAGRAM"]
 }
 
 export interface ImageAdRecord extends BaseAdRecord {
