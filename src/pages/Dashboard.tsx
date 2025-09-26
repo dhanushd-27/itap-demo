@@ -88,7 +88,12 @@ export function Dashboard() {
   return (
     <div className="dashboard">
       <div className="dashboard-header">
-        <img src="/itap.png" alt="iTAP" className="app-logo" />
+        <div className="logo-wrapper">
+          <img src="/itap.png" alt="iTAP" className="app-logo" />
+          <div className="logo-title" aria-hidden>
+            Ad Intelligence AI Agent
+          </div>
+        </div>
       </div>
       <Filters
         sortOrder={sortOrder}
