@@ -106,7 +106,7 @@ export function AdCard({ ad }: AdCardProps) {
         </div>
         <div className="ad-fields">
           <div>
-            <span className="label">Last seen:</span> {formatDateDisplay(ad.lastSeenDate)}
+            <span className="label">Last Active:</span> {formatDateDisplay(ad.lastSeenDate)}
           </div>
           <div className="ad-field-highlighted">
             <span className="label">Running Since:</span> {formatActiveDuration(ad.firstSeenDate, ad.lastSeenDate)}
