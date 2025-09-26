@@ -293,3 +293,23 @@
   font-weight: 600;
   letter-spacing: 0.02em;
 }
+
+/* Subtle highlighted field styling */
+.ad-field-highlighted {
+  background: #f8fafc; /* very light slate background */
+  border-left: 3px solid #3b82f6; /* subtle blue left border */
+  padding: 6px 0 6px 8px;
+  margin: 2px 0;
+  border-radius: 0 4px 4px 0;
+  transition: all 0.2s ease;
+}
+
+.ad-field-highlighted .label {
+  color: #1e40af; /* slightly darker blue for the label */
+  font-weight: 500;
+}
+
+.ad-field-highlighted:hover {
+  background: #f1f5f9; /* slightly darker on hover */
+  border-left-color: #2563eb; /* darker blue on hover */
+}
