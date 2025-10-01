@@ -1,25 +1,29 @@
 import type { ChangeEvent } from 'react';
 
+const RUNNING_SINCE_OPTIONS: Array<{ value: 'asc' | 'desc'; label: string }> = [
+  { value: 'asc', label: 'Recent First' },
+  { value: 'desc', label: 'Old First' },
+];
+
 interface RunningSinceFilterProps {
   value: string;
   onChange: (value: string) => void;
 }
 
 export function RunningSinceFilter({ value, onChange }: RunningSinceFilterProps) {
-  const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    onChange(e.target.value);
-  };
-
   return (
     <label className="control">
       <span className="control-label">Running Since</span>
-      <select className="select" value={value} onChange={handleChange}>
-        <option value="all">All</option>
-        <option value="lt7">Less than 7 days</option>
-        <option value="7to29">7–29 days (weeks)</option>
-        <option value="gte30">30+ days (months)</option>
-        <option value="gte90">90+ days (quarters)</option>
-        <option value="gte365">1+ years</option>
+      <select
+        className="select"
+        value={value}
+        onChange={(e: ChangeEvent<HTMLSelectElement>) => onChange(e.target.value)}
+      >
+        {RUNNING_SINCE_OPTIONS.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
       </select>
     </label>
   );

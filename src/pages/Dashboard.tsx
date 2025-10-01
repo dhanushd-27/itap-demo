@@ -20,7 +20,7 @@ export function Dashboard() {
   // Filter states
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc'); // Default to recent first
   const [lastActiveFilter, setLastActiveFilter] = useState<string>('all');
-  const [runningSinceFilter, setRunningSinceFilter] = useState<string>('all');
+  const [runningSinceFilter, setRunningSinceFilter] = useState<string>('asc');
   const [companyFilter, setCompanyFilter] = useState<string>('all');
   const [formatFilter, setFormatFilter] = useState<string>('Image'); // Default to Image
   const [platformFilter, setPlatformFilter] = useState<string>('all');
@@ -46,16 +46,17 @@ export function Dashboard() {
       });
     }
 
-    // Filter by running since (campaign duration)
-    if (runningSinceFilter !== 'all') {
-      list = list.filter((ad) => {
-        const days = computeActiveDays(ad.firstSeenDate, ad.lastSeenDate);
-        if (runningSinceFilter === 'lt7') return days < 7;
-        if (runningSinceFilter === '7to29') return days >= 7 && days < 30;
-        if (runningSinceFilter === 'gte30') return days >= 30;
-        if (runningSinceFilter === 'gte90') return days >= 90;
-        if (runningSinceFilter === 'gte365') return days >= 365;
-        return true;
+    // Sort by campaign duration (running since), then break ties by last seen
+    if (runningSinceFilter === 'asc' || runningSinceFilter === 'desc') {
+      list.sort((a, b) => {
+        const da = computeActiveDays(a.firstSeenDate, a.lastSeenDate);
+        const db = computeActiveDays(b.firstSeenDate, b.lastSeenDate);
+        if (da !== db) {
+          return runningSinceFilter === 'asc' ? da - db : db - da;
+        }
+        const la = new Date(a.lastSeenDate).getTime();
+        const lb = new Date(b.lastSeenDate).getTime();
+        return sortOrder === 'asc' ? la - lb : lb - la;
       });
     }
 
@@ -84,12 +85,14 @@ export function Dashboard() {
       });
     }
 
-    // Sort by last seen date
-    list.sort((a, b) => {
-      const da = new Date(a.lastSeenDate).getTime();
-      const db = new Date(b.lastSeenDate).getTime();
-      return sortOrder === 'asc' ? da - db : db - da;
-    });
+    // If not sorting by running since, sort by last seen date
+    if (!(runningSinceFilter === 'asc' || runningSinceFilter === 'desc')) {
+      list.sort((a, b) => {
+        const da = new Date(a.lastSeenDate).getTime();
+        const db = new Date(b.lastSeenDate).getTime();
+        return sortOrder === 'asc' ? da - db : db - da;
+      });
+    }
 
     return list;
   }, [items, formatFilter, companyFilter, runningSinceFilter, lastActiveFilter, sortOrder]);
