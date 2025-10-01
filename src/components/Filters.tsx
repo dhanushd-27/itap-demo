@@ -3,6 +3,7 @@ import { LastActiveFilter } from './filters/LastActiveFilter';
 import { RunningSinceFilter } from './filters/RunningSinceFilter';
 import { CompanyFilter } from './filters/CompanyFilter';
 import { FormatFilter } from './filters/FormatFilter';
+import { PlatformFilter } from './filters/PlatformFilter';
 
 interface FiltersProps {
   // Order filter
@@ -25,6 +26,10 @@ interface FiltersProps {
   // Format filter
   formatFilter: string;
   onChangeFormatFilter: (value: string) => void;
+
+  // Platform filter
+  platformFilter: string;
+  onChangePlatformFilter: (value: string) => void;
 }
 
 export function Filters({
@@ -39,6 +44,8 @@ export function Filters({
   companies,
   formatFilter,
   onChangeFormatFilter,
+  platformFilter,
+  onChangePlatformFilter,
 }: FiltersProps) {
   return (
     <div className="toolbar">
@@ -47,6 +54,7 @@ export function Filters({
       <RunningSinceFilter value={runningSinceFilter} onChange={onChangeRunningSinceFilter} />
       <CompanyFilter value={companyFilter} onChange={onChangeCompanyFilter} companies={companies} />
       <FormatFilter value={formatFilter} onChange={onChangeFormatFilter} />
+      <PlatformFilter value={platformFilter} onChange={onChangePlatformFilter} />
     </div>
   );
 }

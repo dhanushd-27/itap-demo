@@ -23,6 +23,7 @@ export function Dashboard() {
   const [runningSinceFilter, setRunningSinceFilter] = useState<string>('all');
   const [companyFilter, setCompanyFilter] = useState<string>('all');
   const [formatFilter, setFormatFilter] = useState<string>('Image'); // Default to Image
+  const [platformFilter, setPlatformFilter] = useState<string>('all');
 
   const filteredAndSorted = useMemo(() => {
     let list = items.slice();
@@ -35,6 +36,14 @@ export function Dashboard() {
     // Filter by company
     if (companyFilter !== 'all') {
       list = list.filter((ad) => ad.advertiserName === companyFilter);
+    }
+
+    // Filter by platform (scraped_platform or scraped_from)
+    if (platformFilter !== 'all') {
+      list = list.filter((ad: any) => {
+        const platform = ad.scraped_platform || ad.scraped_from || '';
+        return platform === platformFilter;
+      });
     }
 
     // Filter by running since (campaign duration)
@@ -107,6 +116,8 @@ export function Dashboard() {
         companies={companies}
         formatFilter={formatFilter}
         onChangeFormatFilter={setFormatFilter}
+        platformFilter={platformFilter}
+        onChangePlatformFilter={setPlatformFilter}
       />
       <div className="grid">
         {filteredAndSorted.slice(0, 50).map((ad, idx) => (

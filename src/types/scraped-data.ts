@@ -42,6 +42,9 @@ export interface BaseAdRecord {
   apiData: ApiData;
   // Present only for Facebook Ad Library-derived records
   publisher_platform?: string[]; // e.g. ["FACEBOOK", "INSTAGRAM"]
+  // Source tagging added by backfill/import scripts
+  scraped_from?: string;          // legacy name
+  scraped_platform?: string;      // preferred name: "Meta Ad Library" | "Google Ad Transparency"
 }
 
 export interface ImageAdRecord extends BaseAdRecord {
