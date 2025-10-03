@@ -18,7 +18,7 @@ export function Dashboard() {
   }, [items]);
 
   // Filter states
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc'); // Default to recent first
+  // Sort order is fixed to recent-first; UI control removed
   const [lastActiveFilter, setLastActiveFilter] = useState<string>('all');
   const [runningSinceFilter, setRunningSinceFilter] = useState<string>('asc');
   const [companyFilter, setCompanyFilter] = useState<string>('all');
@@ -46,7 +46,7 @@ export function Dashboard() {
       });
     }
 
-    // Sort by campaign duration (running since), then break ties by last seen
+    // Sort by campaign duration (running since), then break ties by last seen (recent first)
     if (runningSinceFilter === 'asc' || runningSinceFilter === 'desc') {
       list.sort((a, b) => {
         const da = computeActiveDays(a.firstSeenDate, a.lastSeenDate);
@@ -56,7 +56,7 @@ export function Dashboard() {
         }
         const la = new Date(a.lastSeenDate).getTime();
         const lb = new Date(b.lastSeenDate).getTime();
-        return sortOrder === 'asc' ? la - lb : lb - la;
+        return lb - la;
       });
     }
 
@@ -85,17 +85,17 @@ export function Dashboard() {
       });
     }
 
-    // If not sorting by running since, sort by last seen date
+    // If not sorting by running since, sort by last seen date (recent first)
     if (!(runningSinceFilter === 'asc' || runningSinceFilter === 'desc')) {
       list.sort((a, b) => {
         const da = new Date(a.lastSeenDate).getTime();
         const db = new Date(b.lastSeenDate).getTime();
-        return sortOrder === 'asc' ? da - db : db - da;
+        return db - da;
       });
     }
 
     return list;
-  }, [items, formatFilter, companyFilter, runningSinceFilter, lastActiveFilter, sortOrder]);
+  }, [items, formatFilter, companyFilter, runningSinceFilter, lastActiveFilter]);
 
   return (
     <div className="dashboard">
@@ -108,8 +108,6 @@ export function Dashboard() {
         </div>
       </div>
       <Filters
-        sortOrder={sortOrder}
-        onChangeSortOrder={setSortOrder}
         lastActiveFilter={lastActiveFilter}
         onChangeLastActiveFilter={setLastActiveFilter}
         runningSinceFilter={runningSinceFilter}
