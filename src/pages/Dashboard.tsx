@@ -28,10 +28,10 @@ export function Dashboard() {
   
   const observer = useRef<IntersectionObserver | null>(null);
   const lastItemRef = useCallback((node: HTMLDivElement) => {
-    if (loading) return;
+    if (loading || !hasMore) return;
     if (observer.current) observer.current.disconnect();
     observer.current = new IntersectionObserver(entries => {
-      if (entries[0].isIntersecting && hasMore) {
+      if (entries[0].isIntersecting) {
         setCurrentPage(prev => prev + 1);
       }
     });
@@ -50,6 +50,8 @@ export function Dashboard() {
   
   // Load ads data
   const loadAds = useCallback(async () => {
+    // if (loading) return; // Don't load if already loading
+    
     try {
       if (currentPage === 1) {
         setLoading(true); // Only show loading spinner for first page
@@ -91,7 +93,7 @@ export function Dashboard() {
         setLoading(false);
       }
     }
-  }, [currentPage, itemsPerPage, formatFilter, searchQuery]);
+  }, [currentPage, itemsPerPage, formatFilter, searchQuery, loading]);
   
   // Load stats data
   const loadStats = useCallback(async () => {
