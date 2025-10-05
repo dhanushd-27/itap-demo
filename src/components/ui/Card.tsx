@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import type { ReactNode } from 'react';
 
 interface CardRootProps {
@@ -10,14 +10,24 @@ export function Card({ children, className }: CardRootProps) {
   return <div className={`card ${className ?? ''}`.trim()}>{children}</div>;
 }
 
-interface CardImageProps {
+interface CardMediaProps {
   src?: string | null;
+  type: 'image' | 'video';
   alt?: string;
 }
 
-export function CardImage({ src, alt }: CardImageProps) {
+export function CardMedia({ src, type, alt }: CardMediaProps) {
   const [naturalSize, setNaturalSize] = useState<{ w: number; h: number } | null>(null);
   const [hasError, setHasError] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  // Set initial video to paused state on mount
+  useEffect(() => {
+    if (type === 'video' && videoRef.current) {
+      videoRef.current.muted = true;
+      videoRef.current.controls = false;
+    }
+  }, [type]);
 
   const showPlaceholder = !src || hasError;
 
@@ -28,7 +38,45 @@ export function CardImage({ src, alt }: CardImageProps) {
   if (showPlaceholder) {
     return (
       <div className="card-image-wrapper" style={style}>
-        <div className="card-image placeholder grey"></div>
+        <div className="card-image placeholder">
+          <div className="placeholder-content">
+            <span className="placeholder-icon">{type === 'video' ? '🎥' : '🖼️'}</span>
+            <span>No Preview Available</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (type === 'video') {
+    return (
+      <div className="card-image-wrapper" style={style}>
+        <video
+          ref={videoRef}
+          className="card-image"
+          src={src}
+          muted
+          preload="metadata"
+          playsInline
+          onClick={(e) => {
+            // Toggle play/pause on click
+            const video = e.currentTarget;
+            if (video.paused) {
+              video.play();
+            } else {
+              video.pause();
+            }
+          }}
+          onMouseEnter={(e) => {
+            // Show controls on hover
+            e.currentTarget.controls = true;
+          }}
+          onMouseLeave={(e) => {
+            // Hide controls when not hovering
+            e.currentTarget.controls = false;
+          }}
+          onError={() => setHasError(true)}
+        />
       </div>
     );
   }
@@ -54,7 +102,7 @@ interface CardBodyProps {
 }
 
 export function CardBody({ children }: CardBodyProps) {
-  return <div className="card-body">{children}</div>;
+  return <div className="ad-card-content">{children}</div>;
 }
 
 interface CardTitleProps {

@@ -19,6 +19,10 @@ export function computeActiveDays(firstSeen: string, lastSeen: string): number {
 
 export function formatActiveDuration(firstSeen: string, lastSeen: string): string {
   const days = computeActiveDays(firstSeen, lastSeen);
+  if (days === 0) {
+    // If it's the same day, return a more meaningful message
+    return 'Today';
+  }
   if (days < 7) {
     return `${days} day${days === 1 ? '' : 's'}`;
   }

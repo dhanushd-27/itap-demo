@@ -20,7 +20,7 @@ export interface ImageAdCreative extends AdCreativeBase {
 
 export interface VideoAdCreative extends AdCreativeBase {
   imageUrl: null;          // imageUrl is null for video creatives
-  videoUrl: string | null; // often "Check GATC link"
+  videoUrl: string | null; // URL of the actual video
 }
 
 export type AdCreative = ImageAdCreative | VideoAdCreative;

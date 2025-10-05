@@ -1,6 +1,6 @@
-import type { AdRecord, ImageAdRecord, VideoAdRecord } from '../types';
+import type { AdRecord, ImageAdRecord, VideoAdRecord, VideoAdCreative } from '../types';
 import type { AdCardProps } from '../types/components';
-import { Card, CardImage, CardBody, CardTitle, CardBadge } from './ui/Card';
+import { Card, CardMedia, CardBody, CardTitle, CardBadge } from './ui/Card';
 import { formatDateDisplay, formatActiveDuration } from '../utils/dates';
 
 function isImageAdRecord(ad: AdRecord): ad is ImageAdRecord {
@@ -11,26 +11,40 @@ function isVideoAdRecord(ad: AdRecord): ad is VideoAdRecord {
   return ad.format === 'Video';
 }
 
-function resolveImage(ad: AdRecord): string | null {
-  if (isImageAdRecord(ad)) {
-    return ad.adCreative.imageUrl ?? ad.imageUrl ?? null;
+function resolveMedia(ad: AdRecord): { type: 'image' | 'video', url: string | null } {
+  // For video ads, try the videoUrl from adCreative first
+  if (ad.format === 'Video' && (ad.adCreative as VideoAdCreative).videoUrl) {
+    return { type: 'video', url: (ad.adCreative as VideoAdCreative).videoUrl };
   }
-  if (isVideoAdRecord(ad)) {
-    if (ad.videoThumbnailUrl) return ad.videoThumbnailUrl;
-    // Fallback: attempt to generate a preview image from the GATC page
-    if (ad.gatcLink) {
-      const encoded = encodeURIComponent(ad.gatcLink);
-      // Using thum.io to render a static preview image of the GATC page
-      // You can replace with your own screenshot service if preferred
-      return `https://image.thum.io/get/width/800/crop/800/${encoded}`;
-    }
-    return null;
+  
+  // For video ads, try the videoThumbnailUrl as fallback
+  if (ad.format === 'Video' && ad.videoThumbnailUrl) {
+    return { type: 'image', url: ad.videoThumbnailUrl };
   }
-  return null;
+  
+  // For image ads, try the adCreative imageUrl
+  if (ad.adCreative && ad.adCreative.imageUrl) {
+    return { type: 'image', url: ad.adCreative.imageUrl };
+  }
+  
+  // For image ads, also try the top-level imageUrl
+  if (ad.format === 'Image' && ad.imageUrl) {
+    return { type: 'image', url: ad.imageUrl };
+  }
+  
+  // Fallback: attempt to generate a preview image from the GATC page
+  if (ad.gatcLink) {
+    const encoded = encodeURIComponent(ad.gatcLink);
+    // Using thum.io to render a static preview image of the GATC page
+    // You can replace with your own screenshot service if preferred
+    return { type: 'image', url: `https://image.thum.io/get/width/800/crop/800/${encoded}` };
+  }
+  
+  return { type: 'image', url: null };
 }
 
 export function AdCard({ ad }: AdCardProps) {
-  const img = resolveImage(ad);
+  const media = resolveMedia(ad);
   const gatcLink = ad.gatcLink ?? null;
   const platforms = Array.isArray((ad as AdRecord).publisher_platform) ? (ad as AdRecord).publisher_platform as string[] : null;
   const platformIconSrc: Record<string, string> = {
@@ -40,13 +54,30 @@ export function AdCard({ ad }: AdCardProps) {
     MESSENGER: '/messenger.png',
   };
 
+  // Determine an icon based on format
+  const formatIcon = ad.format === 'Image' ? '🖼️' : '🎥';
+  
+  // Check if the ad was last seen today to show the "Live" tag
+  const isLive = () => {
+    const today = new Date();
+    const lastSeen = new Date(ad.lastSeenDate);
+    
+    return (
+      lastSeen.getDate() === today.getDate() &&
+      lastSeen.getMonth() === today.getMonth() &&
+      lastSeen.getFullYear() === today.getFullYear()
+    );
+  };
+
   return (
     <Card className="ad-card">
-      <div className="ad-live-pill" aria-hidden>
-        <img className="ad-live-icon" src="/available.gif" alt="" />
-        <span className="ad-live-text">Live</span>
-      </div>
-      {img ? (
+      {isLive() && (
+        <div className="ad-live-pill" aria-hidden>
+          <span className="ad-live-icon">●</span>
+          <span className="ad-live-text">LIVE</span>
+        </div>
+      )}
+      {media.url ? (
         gatcLink ? (
           <a
             href={gatcLink}
@@ -54,24 +85,17 @@ export function AdCard({ ad }: AdCardProps) {
             rel="noopener noreferrer"
             aria-label="Open on Google Ads Transparency Center"
           >
-            <CardImage src={img} alt={ad.advertiserName} />
+            <CardMedia src={media.url} type={media.type} alt={ad.advertiserName} />
           </a>
         ) : (
-          <CardImage src={img} alt={ad.advertiserName} />
+          <CardMedia src={media.url} type={media.type} alt={ad.advertiserName} />
         )
       ) : (
         <div className="card-image-wrapper">
-          {gatcLink ? (
-            <a
-              href={gatcLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="card-image placeholder"
-              aria-label="Open on Google Ads Transparency Center"
-            />
-          ) : (
-            <div className="card-image placeholder " />
-          )}
+          <div className="card-image placeholder">
+            <span className="placeholder-icon">{media.type === 'video' ? '🎥' : '🖼️'}</span>
+            <span>No Preview Available</span>
+          </div>
         </div>
       )}
       <CardBody>
@@ -89,27 +113,36 @@ export function AdCard({ ad }: AdCardProps) {
           )}
         </div>
         <div className="ad-meta">
-          <CardBadge>Format: {ad.format}</CardBadge>
+          <CardBadge>
+            {formatIcon} {ad.format}
+          </CardBadge>
           {platforms && platforms.length > 0 && (
             <div className="ad-platform-icons" title={`Platforms: ${platforms.join(', ')}`}>
-              {platforms.map((p) => (
+              {platforms.slice(0, 3).map((p, index) => (
                 <img
-                  key={p}
+                  key={`${p}-${index}`}
                   className="ad-platform-icon"
                   src={platformIconSrc[p] ?? '/network.png'}
                   alt={p}
                   title={p}
                 />
               ))}
+              {platforms.length > 3 && (
+                <span className="ad-platform-icon" title={`+${platforms.length - 3} more`}>
+                  +{platforms.length - 3}
+                </span>
+              )}
             </div>
           )}
         </div>
         <div className="ad-fields">
-          <div>
-            <span className="label">Last Active:</span> {formatDateDisplay(ad.lastSeenDate)}
+          <div className="ad-field-item">
+            <span className="label">Last Active:</span>
+            <span className="value">{formatDateDisplay(ad.lastSeenDate)}</span>
           </div>
           <div className="ad-field-highlighted">
-            <span className="label">Running Since:</span> {formatActiveDuration(ad.firstSeenDate, ad.lastSeenDate)}
+            <span className="label">Running Since:</span>
+            <span className="value">{formatActiveDuration(ad.firstSeenDate, ad.lastSeenDate)}</span>
           </div>
         </div>
       </CardBody>
