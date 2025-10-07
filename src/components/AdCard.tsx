@@ -1,15 +1,7 @@
-import type { AdRecord, ImageAdRecord, VideoAdRecord, VideoAdCreative } from '../types';
+import type { AdRecord, VideoAdCreative } from '../types';
 import type { AdCardProps } from '../types/components';
 import { Card, CardMedia, CardBody, CardTitle, CardBadge } from './ui/Card';
 import { formatDateDisplay, formatActiveDuration } from '../utils/dates';
-
-function isImageAdRecord(ad: AdRecord): ad is ImageAdRecord {
-  return ad.format === 'Image';
-}
-
-function isVideoAdRecord(ad: AdRecord): ad is VideoAdRecord {
-  return ad.format === 'Video';
-}
 
 function resolveMedia(ad: AdRecord): { type: 'image' | 'video', url: string | null } {
   // For video ads, try the videoUrl from adCreative first

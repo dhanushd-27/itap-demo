@@ -40,7 +40,7 @@ export function Dashboard() {
 
   // Debounced search function
   const debouncedSearch = useCallback(
-    debounce((query: string) => {
+    debounce(() => {
       setCurrentPage(1); // Reset to first page when searching
       setItems([]); // Clear current items
       setHasMore(true); // Reset has more flag
@@ -143,7 +143,7 @@ export function Dashboard() {
   const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const query = e.target.value;
     setSearchQuery(query);
-    debouncedSearch(query);
+    debouncedSearch();
   }, [debouncedSearch]);
   
   
